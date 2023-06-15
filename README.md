@@ -4,7 +4,7 @@ Promptbook is a full-stack, CRUD, Next.js 13 web application that lets you share
 
 ## Learnings
 
-### What does Next.js have that React does not?
+### The Benefits of Next.js - What does Next.js have that React does not?
 
 Next.js simplifies the development process and optimizes web applications through its primary features:
 
@@ -155,4 +155,141 @@ const Error = ({ error, reset }) => {
 };
 
 export default Error;
+```
+
+### Data Fetching (SSR, SSG, ISR)
+
+Next.js provides three choices for selecting how to fetch data:
+
+1. **Server Side Rendering (SSR)**: This means dynamic data rendered by the server. It is fetched fresh on each request. With SSR, each request to the server triggers a new rendering cycle and data fetch ensuring that the content is always up to date. _Example_:
+
+```javascript
+async function Page({ params }) {
+  const res = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${params.id}`,
+    { cache: "no-store" }
+  );
+  const data = await res.json();
+
+  return (
+    <div>
+      <div>
+        <h1>{data.title}</h1>
+        <p>{data.body}</p>
+      </div>
+    </div>
+  );
+}
+```
+
+Here, we have an async function Page() where we are trying to fetch some data from the _jsonplaceholder_ API. Specifically, it is a dynamic page because we get the ID from the `params` of the page. The `cache: "no-store"` means we are not storing this information but simply fetching it and then displaying the title and the body of the fetched post. This ensures that it fetches the data every single time which means that it is server-side rendered.
+
+2. **Static Site Generation (SSG) - Default**: If the `cache:no-store` is removed, that is static site generation which is what Next.js uses by default. It will automatically fetch the data but it will also cache it. This method is ideal for content that does not change frequently such as blog posts, documentation or marketing pages. For the first time, it is going to make a fetch, and then, it is going to already have the data and just display it.
+
+3. **Incremental Static Generation (ISR)**: This method can be used by replacing `cache: "no-store"` with `next: {revalidate: 10}`. This combines the benefit of SSR and SSG for dynamic content in static sites. With ISR, we can specify certain data to be statically fetched at build time while defining a revalidation time interval (i.e. **10** in the above example). This means the data will be cached but after a specific time frame, it will refresh it and we will always have new data making this the both of best worlds for dynamic content.
+
+### Next.js API Endpoints
+
+Next.js allows applications to be full-stack which means running the application both on the front-end and the back-end. Using the same file-based routing system, Next.js allows us to handle HTTP requests and back-end functionality without requiring an external server like you would need Express in React.
+
+Next.js covers all of the features found in traditional backend servers like middleware, parsing, authentication, serverless functions that simplify the deployment and scaling of API routes, and more.
+
+**How to create a simple request route in Next.js?**
+There are two different ways to define a route handler in Next.js. The first one is to create a file-based route handler within the `api` folder in the `app` directory.
+
+The second approach is to create a direct route handler in the app directory itself. The caveat with this approach is that you have to create a special `route.js` file that is going to act as the backend API route. If you want to create a route that's going to start with a slash (/), as `page.js` does, then you need to keep in mind that the two names can not interfere. In the same fashion, if you wanted to create an API route for /post, you wouldn't be able to have a route within the post next to `page.js` because Next.js won't know:
+
+```javascript
+// posts -> regular
+// posts -> api route
+```
+
+The first approach is recommended. Don't create routes within the `app` folder but instead, to keep our code clean and understandable, keep all the back-end related logic and API endpoints within the `api` folder. This separation makes it clear where your back-end and front-end are:
+
+```javascript
+// > app
+//     > api
+//         > users
+//             > route.js
+```
+
+Next.js supports the following HTTP methods:
+
+1. **GET** Retrieves data or resources from the server.
+2. **POST**: Submits data to the server to create a new resource.
+3. **PUT**: Updates or replaces an existing resource on the server.
+4. **PATCH**: Partially updates an existing resource on the server.
+5. **DELETE**: Removes a specific resource from the server.
+6. **HEAD**: Retrieves the headers of a resource without fetching its body.
+7. **OPTIONS**: Retrieves the supported HTTP methods and other communication options for a resource.
+
+To create an HTTP method inside the route.js file, you simply need to write a GET function and begin implementing your backend logic within it:
+
+```javascript
+export async function GET(request) {
+  return new Response("Hello, Next.js!");
+}
+
+// GET would be replace by other HTTP verbs where needed.
+```
+
+_Example_:
+
+```javascript
+export async function GET(request) {
+  // Handle GET request for /api/users
+  // Retrieve users from the database or any data source
+  const users = [
+    { id: 1, name: "John" },
+    { id: 2, name: "Jane" },
+    { id: 3, name: "Bob" },
+  ];
+
+  // Send the users a response
+  return new Response(JSON.stringify(users));
+}
+```
+
+There is no need to set up any extra additional express configuration.
+
+### SEO & Metadata
+
+Recently, Next.js introduced its new Metadata API. We can define Metadata in two ways:
+
+1. Static Metadata: To modify the metadata in a static way, the only thing you have to do is export a special object called `metadata` from `page.js`:
+
+```javascript
+export const metadata = {
+  title: "Home",
+};
+
+// Output:
+// <head>
+//  <title>Home</title>
+//</head>
+
+export default function Page() {
+  return <h1>My normal Next.js Page with Static Metadata</h1>;
+}
+```
+
+2. Dynamic Metadata: You will need to define and export an asynchronous function called `generateMetadata({params, searchParams})` that is going to get the dynamic parameters of a specific page, for instance, a product's ID. Based on the product's ID, we can then make a call to the getProduct function and then as the title of the page we can return a dynamic title that is equal to the title of that specific product:
+
+```javascript
+export async function generateMetadata({ params, searchParams }) {
+  const product = await getProduct(params.id);
+
+  return {
+    title: product.title,
+  };
+}
+
+// Output:
+// <head>
+//  <title>My Unique Product</title>
+// </head>
+
+export default function Page() {
+  return <h1>My Normal Next.js Page with Dynamic Metadata</h1>;
+}
 ```
