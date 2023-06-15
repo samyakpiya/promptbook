@@ -2,6 +2,20 @@
 
 Promptbook is a full-stack, CRUD, Next.js 13 web application that lets you share discover, create, and share creative AI prompts. The purpose of building this application is to master essential Next.js concepts and new Next.js 13 features.
 
+## Dependencies
+
+- bcrypt -> to hash passwords
+- mongodb -> database of choice
+- mongoose - database management
+- next-auth - authentication
+
+## File and Folder Structure
+
+- /components - for reusable components
+- /models - for MongoDB, mongoose database models
+- /utils - for utility functions used throughout the application
+- .env - environment variables inside of which secure keys are stored
+
 ## Learnings
 
 ### The Benefits of Next.js - What does Next.js have that React does not?
