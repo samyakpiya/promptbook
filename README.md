@@ -12,7 +12,7 @@ Promptbook is a full-stack, CRUD, Next.js 13 web application that lets you share
 ## File and Folder Structure
 
 - /components - for reusable components
-- /models - for MongoDB, mongoose database models
+- /models - for MongoDB, mongoose database models (model based on which the document of the user will be created)
 - /utils - for utility functions used throughout the application
 - .env - environment variables inside of which secure keys are stored
 
@@ -307,3 +307,17 @@ export default function Page() {
   return <h1>My Normal Next.js Page with Dynamic Metadata</h1>;
 }
 ```
+
+### Serverless Architecture in Next.js
+
+- Every Next.js route is a serverless route: In Next.js, a route refers to a specific URL or endpoint that your application can respond to. Serverless routes in Next.js are designed to be lightweight and efficient. Instead of running on a traditional server that is always running, these routes are implemented as lambda functions.
+
+- Lambda function that only opens up when it's called: In serverless computing, a lambda function is a small, self-contained piece of code that can be executed in response to an event. In this case, when a Next.js serverless route is called (when a user accesses a specific URL), the corresponding lambda function associated with that route is invoked. The lambda function "opens up" or executes only when it's triggered by a request.
+
+- Spinning up the server and making a connection with the database: When a serverless route is called, the lambda function needs to perform certain tasks to respond to the request. This typically involves spinning up (starting) a server instance to handle the request and establishing a connection with a database if data retrieval or manipulation is required.
+
+- The server doesn't run constantly: Unlike traditional server setups where a server is kept running continuously, serverless routes in Next.js only activate when requested. This on-demand nature allows for efficient resource utilization since the server is active only when needed. It helps to minimize costs and improve scalability.
+
+- Connection to the database: To retrieve or update data from a database, the serverless route needs to establish a connection with the database. This connection is made when the lambda function is executed and is used to perform the necessary database operations required to handle the route's request.
+
+In summary, the use of serverless routes in Next.js allows for efficient resource allocation by spinning up the server and establishing a database connection only when a specific route is called. This approach minimizes costs and enhances scalability compared to keeping a server running constantly.
