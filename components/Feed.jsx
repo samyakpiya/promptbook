@@ -14,9 +14,12 @@ const PromptCardList = ({ data, handleTagClick }) => {
 };
 
 const Feed = () => {
-  const [searchText, setSearchText] = useState("");
   const [posts, setPosts] = useState([]);
-  const handleSearchChange = (e) => {};
+
+  // Search states
+  const [searchText, setSearchText] = useState("");
+  const [searchTimeout, setSearchedTimeout] = useState(null);
+  const [searchedResults, setSearchedResults] = useState([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -28,9 +31,45 @@ const Feed = () => {
     fetchPosts();
   }, []);
 
+  const filterPrompts = (searchText) => {
+    let matches = [];
+    for (let i = 0; i < posts.length; i++) {
+      let currPost = posts[i];
+      if (
+        currPost.prompt.toString().includes(searchText) ||
+        currPost.tag.toString().includes(searchText) ||
+        currPost.creator.username.toString().includes(searchText)
+      ) {
+        matches.push(currPost);
+      }
+    }
+    return matches;
+  };
+
+  const handleSearchChange = (e) => {
+    clearTimeout(searchTimeout);
+    setSearchText(e.target.value);
+
+    setSearchedTimeout(
+      setTimeout(() => {
+        const searchResult = filterPrompts(e.target.value);
+        setSearchedResults(searchResult);
+      }, 500)
+    );
+  };
+
+  const handleTagClick = (tag) => {
+    setSearchText(tag);
+    setSearchedResults(filterPrompts(tag));
+  };
+
   return (
     <section className="feed">
-      <form className="relative w-full flex-center">
+      <form
+        className="relative w-full flex-center"
+        onSubmit={(e) => e.preventDefault()}
+        noValidate
+      >
         <input
           type="text"
           placeholder="Search for a tag or username..."
@@ -41,7 +80,10 @@ const Feed = () => {
         />
       </form>
 
-      <PromptCardList data={posts} handleTagClick={() => {}} />
+      <PromptCardList
+        data={searchedResults.length > 0 ? searchedResults : posts}
+        handleTagClick={handleTagClick}
+      />
     </section>
   );
 };
