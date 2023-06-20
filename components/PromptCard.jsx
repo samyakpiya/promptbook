@@ -7,8 +7,8 @@ import { usePathname, useRouter } from "next/navigation";
 
 const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
   const { data: session } = useSession();
-  const pathname = usePathname();
   const router = useRouter();
+  const pathname = usePathname();
 
   const [copied, setCopied] = useState("");
 
@@ -16,6 +16,14 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
     setCopied(post.prompt);
     navigator.clipboard.writeText(post.prompt);
     setTimeout(() => setCopied(""), 3000);
+  };
+
+  const viewProfile = async () => {
+    session?.user.id === post.creator._id
+      ? router.push("/profile")
+      : router.push(
+          `/profile/${post.creator._id}?name=${post.creator.username}`
+        );
   };
 
   return (
@@ -30,7 +38,7 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
             className="rounded-full object-contain"
           />
 
-          <div className="flex flex-col">
+          <div className="flex flex-col" onClick={viewProfile}>
             <h3 className="font-satoshi font-semibold text-gray-900">
               {post.creator.username}
             </h3>

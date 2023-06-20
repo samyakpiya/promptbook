@@ -20,6 +20,14 @@ const Nav = () => {
     setUpProviders();
   }, []);
 
+  const handleSignOut = async () => {
+    await signOut();
+
+    // Clear the session cookie
+    document.cookie =
+      "next-auth.session-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  };
+
   return (
     <nav className="flex-between w-full mb-16 pt-3">
       <Link href="/" className="flex gap-2 flex-center">
@@ -40,7 +48,11 @@ const Nav = () => {
             <Link href="/create-prompt" className="black_btn">
               Create Post
             </Link>
-            <button type="button" onClick={signOut} className="outline_btn">
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="outline_btn"
+            >
               Sign Out
             </button>
             <Link href="/profile">
@@ -105,7 +117,7 @@ const Nav = () => {
                   type="button"
                   onClick={() => {
                     setToggleDropdown(false);
-                    signOut();
+                    handleSignOut();
                   }}
                   className="mt-5 w-full black_btn"
                 >

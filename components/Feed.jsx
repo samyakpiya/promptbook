@@ -31,19 +31,14 @@ const Feed = () => {
     fetchPosts();
   }, []);
 
-  const filterPrompts = (searchText) => {
-    let matches = [];
-    for (let i = 0; i < posts.length; i++) {
-      let currPost = posts[i];
-      if (
-        currPost.prompt.toString().includes(searchText) ||
-        currPost.tag.toString().includes(searchText) ||
-        currPost.creator.username.toString().includes(searchText)
-      ) {
-        matches.push(currPost);
-      }
-    }
-    return matches;
+  const filterPrompts = (searchtext) => {
+    const regex = new RegExp(searchtext, "i");
+    return posts.filter(
+      (item) =>
+        regex.test(item.creator.username) ||
+        regex.test(item.tag) ||
+        regex.test(item.prompt)
+    );
   };
 
   const handleSearchChange = (e) => {
