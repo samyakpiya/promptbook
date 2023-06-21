@@ -1,6 +1,20 @@
 # Promptbook
 
+![Promptbook Landing Page Screenshot](./public/assets/screenshots/promptbook.png)
+
 Promptbook is a full-stack, CRUD, Next.js 13 web application that lets you share discover, create, and share creative AI prompts. The purpose of building this application is to master essential Next.js concepts and new Next.js 13 features.
+
+## Create Prompts
+
+![Promptbook Create Prompt Page Screenshot](./public/assets/screenshots/create-post.png)
+
+## Edit Prompts
+
+![Promptbook Edit Prompt Screenshot](./public/assets/screenshots/edit-post.png)
+
+## View Profile
+
+![Promptbook Signed In User Profile Page Screenshot](./public/assets/screenshots/profile.png)
 
 ## Dependencies
 
