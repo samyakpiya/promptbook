@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import PromptCard from "./PromptCard";
 
 const PromptCardList = ({ data, handleTagClick }) => {
@@ -15,7 +16,7 @@ const PromptCardList = ({ data, handleTagClick }) => {
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
-
+  const { data: session } = useSession();
   // Search states
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchedTimeout] = useState(null);
@@ -29,7 +30,7 @@ const Feed = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [session?.user.id]);
 
   const filterPrompts = (searchtext) => {
     const regex = new RegExp(searchtext, "i");
