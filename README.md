@@ -335,14 +335,3 @@ export default function Page() {
 - Connection to the database: To retrieve or update data from a database, the serverless route needs to establish a connection with the database. This connection is made when the lambda function is executed and is used to perform the necessary database operations required to handle the route's request.
 
 In summary, the use of serverless routes in Next.js allows for efficient resource allocation by spinning up the server and establishing a database connection only when a specific route is called. This approach minimizes costs and enhances scalability compared to keeping a server running constantly.
-
-**TODOS**:
-
-1. Implement Search
-
-- Search by prompt
-- Search by tag
-- Search by username
-
-2. Implement Click on tag
-3. Implement View other profiles
